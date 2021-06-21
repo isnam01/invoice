@@ -1,24 +1,68 @@
-import logo from './logo.svg';
 import './App.css';
+import { Route, Redirect, Switch } from 'react-router-dom';
+import Signin from './pages/signin';
+import Invoice from './pages/invoices';
+import Dashboard from './pages/dashboard';
+import UserContext from './contexts/userContext';
+import { useContext, useState } from 'react';
+import Layout from './components/layout'
+import User from './pages/users'
+
 
 function App() {
+
+  const userCtx = useContext(UserContext);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <Layout>
+      <Switch>
+        <Route path='/signin'>
+          {userCtx.isLoggedIn && <Redirect to='/invoice' />}
+          <Signin />
+        </Route>
+
+
+        <Route path='/invoice'>
+          {userCtx.isLoggedIn && (
+            <>
+              <Invoice />
+
+            </>
+
+
+          )}
+          {!userCtx.isLoggedIn && <Redirect to='/signin' />}
+        </Route>
+
+        <Route path='/dashboard'>
+          {userCtx.isLoggedIn && (
+            <>
+              <Dashboard />
+
+            </>
+
+
+          )}
+          {!userCtx.isLoggedIn && <Redirect to='/signin' />}
+        </Route>
+        <Route path='/user'>
+          {userCtx.isLoggedIn && (
+            <>
+              <User />
+
+            </>
+
+
+          )}
+          {!userCtx.isLoggedIn && <Redirect to='/signin' />}
+        </Route>
+
+      </Switch>
+    </Layout>
+
+
   );
 }
 
